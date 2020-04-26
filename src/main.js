@@ -7,32 +7,32 @@ import {createTaskEditTemplate} from "./components/task-edit.js";
 import {createLoadBtnTemplate} from "./components/load-btn.js";
 
 import {generateFilters} from "./mock/filter.js";
+import {generateTasks} from "./mock/task.js";
 
 
 const TASK_COUNT = 3;
 const filters = generateFilters();
+const tasks = generateTasks(TASK_COUNT);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteWrapper = document.querySelector(`.main`);
-const siteHeader = siteWrapper.querySelector(`.main__control`);
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteHeader, createSiteMenuTemplate(), `beforeend`);
-render(siteWrapper, createFilterTemplate(filters), `beforeend`);
-render(siteWrapper, createBoardTemplate(), `beforeend`);
+render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
+render(siteMainElement, createFilterTemplate(filters), `beforeend`);
+render(siteMainElement, createBoardTemplate(), `beforeend`);
 
-const board = siteWrapper.querySelector(`.board.container`);
-render(board, createSortingTemplate(), `afterbegin`);
+const boardElement = siteMainElement.querySelector(`.board.container`);
+render(boardElement, createSortingTemplate(), `afterbegin`);
 
-const taskList = siteWrapper.querySelector(`.board__tasks`);
+const taskListElement = siteMainElement.querySelector(`.board__tasks`);
+render(taskListElement, createTaskEditTemplate(tasks[0]), `beforeend`);
 
-render(taskList, createTaskEditTemplate(), `beforeend`);
+for (let i = 1; i < tasks.length; i++) {
+  render(taskListElement, createTaskTemplate(tasks[i]), `beforeend`);
+}
 
-new Array(TASK_COUNT).fill(``).forEach(() => {
-  render(taskList, createTaskTemplate(), `beforeend`);
-});
-
-const contentWrapper = siteWrapper.querySelector(`.board.container`);
-render(contentWrapper, createLoadBtnTemplate(), `beforeend`);
+render(boardElement, createLoadBtnTemplate(), `beforeend`);
