@@ -6,8 +6,11 @@ import {createTaskTemplate} from "./components/task.js";
 import {createTaskEditTemplate} from "./components/task-edit.js";
 import {createLoadBtnTemplate} from "./components/load-btn.js";
 
+import {generateFilters} from "./mock/filter.js";
+
 
 const TASK_COUNT = 3;
+const filters = generateFilters();
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -17,7 +20,7 @@ const siteWrapper = document.querySelector(`.main`);
 const siteHeader = siteWrapper.querySelector(`.main__control`);
 
 render(siteHeader, createSiteMenuTemplate(), `beforeend`);
-render(siteWrapper, createFilterTemplate(), `beforeend`);
+render(siteWrapper, createFilterTemplate(filters), `beforeend`);
 render(siteWrapper, createBoardTemplate(), `beforeend`);
 
 const board = siteWrapper.querySelector(`.board.container`);

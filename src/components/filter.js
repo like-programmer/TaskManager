@@ -13,41 +13,12 @@ const createFilterMarkup = (name, count) => {
 };
 
 
-export const createFilterTemplate = () => {
-  const filterMarkup = [
-    {
-      name: `all`,
-      count: 42,
-    },
-    {
-      name: `overdue`,
-      count: 42,
-    },
-    {
-      name: `today`,
-      count: 42,
-    },
-    {
-      name: `favorites`,
-      count: 42,
-    },
-    {
-      name: `repeating`,
-      count: 42,
-    },
-    {
-      name: `tags`,
-      count: 42,
-    },
-    {
-      name: `archive`,
-      count: 42,
-    },
-  ].map((it) => createFilterMarkup(it.name, it.count)).join(`\n`);
+export const createFilterTemplate = (filters) => {
+  const filtersMarkup = filters.map((it) => createFilterMarkup(it.name, it.count)).join(`\n`);
 
   return (`
     <section class="main__filter filter container">
-    ${filterMarkup}
+    ${filtersMarkup}
       </section>
     `);
 };
