@@ -23,13 +23,12 @@ render(siteWrapper, createBoardTemplate(), `beforeend`);
 const board = siteWrapper.querySelector(`.board.container`);
 render(board, createSortingTemplate(), `afterbegin`);
 
+const taskList = siteWrapper.querySelector(`.board__tasks`);
 
-const TaskContainer = siteWrapper.querySelector(`.board__tasks`);
-
-render(TaskContainer, createTaskEditTemplate(), `beforeend`);
+render(taskList, createTaskEditTemplate(), `beforeend`);
 
 new Array(TASK_COUNT).fill(``).forEach(() => {
-  render(TaskContainer, createTaskTemplate(), `beforeend`);
+  render(taskList, createTaskTemplate(), `beforeend`);
 });
 
 const contentWrapper = siteWrapper.querySelector(`.board.container`);
