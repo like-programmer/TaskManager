@@ -3,8 +3,11 @@ const setTimeFormat = (value) => {
 };
 
 export const formatTime = (date) => {
-  const hours = setTimeFormat(date.getHours() % 12);
+  const hours = date.getHours();
+  const dayHalfWord = hours >= 12 ? `PM` : `AM`;
+  const halfHoursFormat = setTimeFormat(hours % 12);
+  const formattedHours = halfHoursFormat ? halfHoursFormat : 12;
   const minutes = setTimeFormat(date.getMinutes());
 
-  return `${hours}:${minutes}`;
+  return `${formattedHours}:${minutes}${dayHalfWord}`;
 };

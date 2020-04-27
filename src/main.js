@@ -4,13 +4,16 @@ import {createBoardTemplate} from "./components/board.js";
 import {createSortingTemplate} from "./components/sorting.js";
 import {createTaskTemplate} from "./components/task.js";
 import {createTaskEditTemplate} from "./components/task-edit.js";
-import {createLoadBtnTemplate} from "./components/load-btn.js";
+import {createLoadMoreBtnTemplate} from "./components/load-more-btn.js";
 
 import {generateFilters} from "./mock/filter.js";
 import {generateTasks} from "./mock/task.js";
 
 
-const TASK_COUNT = 3;
+const TASK_COUNT = 21;
+const SHOWING_TASK_COUNT_ON_START = 8;
+const SHOWING_TASK_COUNT_BY_BUTTON = 8;
+
 const filters = generateFilters();
 const tasks = generateTasks(TASK_COUNT);
 
@@ -31,8 +34,20 @@ render(boardElement, createSortingTemplate(), `afterbegin`);
 const taskListElement = siteMainElement.querySelector(`.board__tasks`);
 render(taskListElement, createTaskEditTemplate(tasks[0]), `beforeend`);
 
-for (let i = 1; i < tasks.length; i++) {
+let showingTaskCount = SHOWING_TASK_COUNT_ON_START;
+
+for (let i = 1; i < showingTaskCount; i++) {
   render(taskListElement, createTaskTemplate(tasks[i]), `beforeend`);
 }
 
-render(boardElement, createLoadBtnTemplate(), `beforeend`);
+render(boardElement, createLoadMoreBtnTemplate(), `beforeend`);
+
+const loadMoreBtn = boardElement.querySelector(`.load-more`);
+loadMoreBtn.addEventListener(`click`, () => {
+  const prevTaskCount = showingTaskCount;
+  showingTaskCount = showingTaskCount + SHOWING_TASK_COUNT_BY_BUTTON;
+  
+  tasks.slice(prevTaskCount, showingTaskCount).forEach((task) => {
+    render(taskListElement, createTaskTemplate(task), `beforeend`);
+  });
+});
