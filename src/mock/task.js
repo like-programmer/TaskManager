@@ -1,3 +1,7 @@
+import {COLORS} from "../const.js";
+
+const desriptionItems = [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`];
+
 const defaultRepeatingDays = {
   "mo": false,
   "tu": false,
@@ -5,17 +9,41 @@ const defaultRepeatingDays = {
   "th": false,
   "fr": false,
   "sa": false,
-  "su": false
+  "su": false,
+};
+
+const getRandomArrayItem = (array) => {
+  const randomIndex = getRandomIntegerNumber(0, array.length);
+  return array[randomIndex];
+};
+
+const getRandomIntegerNumber = (min, max) => {
+  return min + Math.floor(Math.random() * (max - min));
+};
+
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const sign = Math.random() > 0.5 ? 1 : 1;
+  const diffValue = sign * getRandomIntegerNumber(0, 8);
+
+  targetDate.setDate(targetDate.getDate() + diffValue);
+  return targetDate;
+};
+
+const generateRepeatingDays = () => {
+  return Object.assign({}, defaultRepeatingDays, {"mo": Math.random() > 0.5});
 };
 
 const generateTask = () => {
+  const dueDate = Math.random() > 0.5 ? null : getRandomDate();
+
   return {
-    description: `Example default task with default color.`,
-    dueDate: Math.random() > 0.5 ? new Date() : null,
-    color: `green`,
-    repeatingDays: Object.assign({}, defaultRepeatingDays, {"mo": Math.random() > 0.5}),
+    description: getRandomArrayItem(desriptionItems),
+    dueDate,
+    repeatingDays: dueDate ? defaultRepeatingDays : generateRepeatingDays(),
+    color: getRandomArrayItem(COLORS),
     isArchive: Math.random() > 0.5,
-    isFavourite: Math.random() > 0.5
+    isFavourite: Math.random() > 0.5,
   };
 };
 
