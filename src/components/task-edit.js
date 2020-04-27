@@ -1,3 +1,6 @@
+import {MONTH_NAMES} from "../const.js";
+import {formatTime} from "../utils.js";
+
 const createColorsMarkup = () => {
   return (`
   <input
@@ -145,11 +148,14 @@ const createRepeatingDaysMarkup = () => {
 export const createTaskEditTemplate = (task) => {
   const {description, dueDate, color, repeatingDays} = task;
 
-  const date = `23 September`;
-  const time = `16:15`;
+  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  const isDateShowing = !!dueDate;
+
+  const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
+  const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const repeatClass = `card--repeat`;
-  const deadlineClass = `card--deadline`;
+  const deadlineClass = isExpired ? `card--deadline` : ``;
 
   const colorsMarkup = createColorsMarkup();
   const repeatingDaysMarkup = createRepeatingDaysMarkup();
@@ -178,9 +184,10 @@ export const createTaskEditTemplate = (task) => {
                   <div class="card__details">
                     <div class="card__dates">
                       <button class="card__date-deadline-toggle" type="button">
-                        date: <span class="card__date-status">yes</span>
+                        date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                       </button>
 
+${isDateShowing ? `
                       <fieldset class="card__date-deadline">
                         <label class="card__input-deadline-wrap">
                           <input
@@ -192,6 +199,7 @@ export const createTaskEditTemplate = (task) => {
                           />
                         </label>
                       </fieldset>
+    ` : ``}
 
                       <button class="card__repeat-toggle" type="button">
                         repeat:<span class="card__repeat-status">yes</span>
@@ -221,4 +229,5 @@ export const createTaskEditTemplate = (task) => {
             </form>
           </article>
     `);
-};
+}
+;
