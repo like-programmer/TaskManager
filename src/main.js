@@ -46,8 +46,12 @@ const loadMoreBtn = boardElement.querySelector(`.load-more`);
 loadMoreBtn.addEventListener(`click`, () => {
   const prevTaskCount = showingTaskCount;
   showingTaskCount = showingTaskCount + SHOWING_TASK_COUNT_BY_BUTTON;
-  
+
   tasks.slice(prevTaskCount, showingTaskCount).forEach((task) => {
     render(taskListElement, createTaskTemplate(task), `beforeend`);
   });
+
+  if (showingTaskCount >= tasks.length) {
+    loadMoreBtn.remove();
+  }
 });
