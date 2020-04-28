@@ -1,8 +1,20 @@
 import {MONTH_NAMES} from "../const.js";
 import {formatTime} from "../utils.js";
 
+const createHashTagMarkup = (tags) => {
+  return tags.map((tag) => {
+    return (`
+        <span class="card__hashtag-inner">
+                          <span class="card__hashtag-name">
+                            #${tag}
+                          </span>
+                        </span>
+        `);
+  }).join(`\n`);
+};
+
 export const createTaskTemplate = (task) => {
-  const {description, dueDate, color, repeatingDays, isArchive, isFavourite} = task;
+  const {description, dueDate, color, repeatingDays, tags, isArchive, isFavourite} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
@@ -11,6 +23,7 @@ export const createTaskTemplate = (task) => {
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
+  const tagsMarkup = createHashTagMarkup(tags);
   const deadlineClass = isExpired ? `card--deadline` : ``;
   const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
   const favouriteButtonInactiveClass = isFavourite ? `` : `card__btn--disabled`;
@@ -54,7 +67,14 @@ export const createTaskTemplate = (task) => {
                   </p>
               </div>
             </div>
+            <div class="card__hashtag">
+                      <div class="card__hashtag-list">
+                        ${tagsMarkup}
+                      </div>
+                    </div>
 </div>
+
+
                 </div>
               </div>
             </div>

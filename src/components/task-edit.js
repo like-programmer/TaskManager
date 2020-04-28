@@ -32,10 +32,30 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
     `);
   }).join(`\n`);
 };
+const createHashTagMarkup = (tags) => {
+  return tags.map((tag) => {
+    return (`
+        <span class="card__hashtag-inner">
+                          <input
+                            type="hidden"
+                            name="hashtag"
+                            value="${tag}"
+                            class="card__hashtag-hidden-input"
+                          />
+                          <p class="card__hashtag-name">
+                            #${tag}
+                          </p>
+                          <button type="button" class="card__hashtag-delete">
+                            delete
+                          </button>
+                        </span>
+        `);
+  }).join(`\n`);
+};
 
 
 export const createTaskEditTemplate = (task) => {
-  const {description, dueDate, color, repeatingDays} = task;
+  const {description, dueDate, color, repeatingDays, tags} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
@@ -45,6 +65,7 @@ export const createTaskEditTemplate = (task) => {
 
   const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
   const repeatClass = isRepeatingTask ? `card--repeat` : ``;
+  const tagsMarkup = createHashTagMarkup(tags);
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
   const colorsMarkup = createColorsMarkup(COLORS, color);
@@ -102,6 +123,21 @@ ${isDateShowing ? `
                         </div>
                       </fieldset>
                       ` : ``}
+                    </div>
+                    
+                    <div class="card__hashtag">
+                      <div class="card__hashtag-list">
+                      ${tagsMarkup}
+                      </div>
+
+                      <label>
+                        <input
+                          type="text"
+                          class="card__hashtag-input"
+                          name="hashtag-input"
+                          placeholder="Type new hashtag here"
+                        />
+                      </label>
                     </div>
                   </div>
 

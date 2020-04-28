@@ -1,6 +1,7 @@
 import {COLORS} from "../const.js";
 
 const desriptionItems = [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`];
+const tags = new Set([`homework`, `theory`, `practice`, `intensive`, `keks`]);
 
 const defaultRepeatingDays = {
   "mo": false,
@@ -15,6 +16,14 @@ const defaultRepeatingDays = {
 const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntegerNumber(0, array.length);
   return array[randomIndex];
+};
+
+const getTagsList = (array) => {
+  const tagsArray = Array.from(array);
+  const startNumber = getRandomIntegerNumber(0, tagsArray.length);
+  const tagsCount = getRandomIntegerNumber(0, 4);
+
+  return tagsArray.slice(startNumber, tagsCount);
 };
 
 const getRandomIntegerNumber = (min, max) => {
@@ -41,6 +50,7 @@ const generateTask = () => {
     description: getRandomArrayItem(desriptionItems),
     dueDate,
     repeatingDays: dueDate ? defaultRepeatingDays : generateRepeatingDays(),
+    tags: getTagsList(tags),
     color: getRandomArrayItem(COLORS),
     isArchive: Math.random() > 0.5,
     isFavourite: Math.random() > 0.5,
