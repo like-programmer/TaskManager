@@ -1,5 +1,5 @@
 import {COLORS, DAYS, MONTH_NAMES} from "../const.js";
-import {formatTime} from "../utils.js";
+import {createDOMElement, formatTime} from "../utils.js";
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors.map((color, index) => {
@@ -16,6 +16,7 @@ const createColorsMarkup = (colors, currentColor) => {
         `);
   }).join(`\n`);
 };
+
 const createRepeatingDaysMarkup = (days, repeatingDays) => {
   return days.map((day, index) => {
     const isChecked = repeatingDays[day];
@@ -32,6 +33,7 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
     `);
   }).join(`\n`);
 };
+
 const createHashTagMarkup = (tags) => {
   return tags.map((tag) => {
     return (`
@@ -53,8 +55,7 @@ const createHashTagMarkup = (tags) => {
   }).join(`\n`);
 };
 
-
-export const createTaskEditTemplate = (task) => {
+const createTaskEditTemplate = (task) => {
   const {description, dueDate, color, repeatingDays, tags} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
@@ -157,5 +158,26 @@ ${isDateShowing ? `
             </form>
           </article>
     `);
+};
+
+export default class TaskEdit {
+  constructor(task) {
+    this._task = task;
+    this.element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createDOMElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
 }
-;
