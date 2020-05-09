@@ -11,3 +11,10 @@ export const formatTime = (date) => {
 
   return `${formattedHours}:${minutes}${dayHalfWord}`;
 };
+
+
+export const createDOMElement = (template) => {
+  const newDOMElement = document.createElement(`div`);
+  newDOMElement.innerHTML = template;
+  return newDOMElement.firstChild;
+};
