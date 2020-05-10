@@ -1,8 +1,7 @@
 import {createDOMElement} from "../utils.js";
 
 const createSiteMenuTemplate = () => {
-  return (`
-    <section class="control__btn-wrap">
+  return (`<section class="control__btn-wrap">
           <input
             type="radio"
             name="control"
@@ -23,8 +22,7 @@ const createSiteMenuTemplate = () => {
             class="control__input visually-hidden"/>
           <label for="control__statistic" class="control__label"
             >STATISTICS</label>
-        </section>
-    `);
+        </section>`);
 };
 
 export default class SiteMenu {

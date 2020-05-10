@@ -72,8 +72,7 @@ const createTaskEditTemplate = (task) => {
   const colorsMarkup = createColorsMarkup(COLORS, color);
   const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, repeatingDays);
 
-  return (`
-    <article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
+  return (`<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__color-bar">
@@ -156,8 +155,7 @@ ${isDateShowing ? `
                 </div>
               </div>
             </form>
-          </article>
-    `);
+          </article>`);
 };
 
 export default class TaskEdit {

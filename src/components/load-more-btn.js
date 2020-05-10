@@ -1,9 +1,7 @@
 import {createDOMElement} from "../utils.js";
 
 const createLoadMoreBtnTemplate = () => {
-  return (`
-    <button class="load-more" type="button">load more</button>
-    `);
+  return (`<button class="load-more" type="button">load more</button>`);
 };
 
 export default class LoadMoreBtn {
