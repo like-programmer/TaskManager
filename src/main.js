@@ -17,9 +17,6 @@ const TASK_COUNT = 21;
 const SHOWING_TASK_COUNT_ON_START = 8;
 const SHOWING_TASK_COUNT_BY_BUTTON = 8;
 
-const filters = generateFilters();
-const tasks = generateTasks(TASK_COUNT);
-
 const renderTask = (taskListElement, task) => {
   const onEditBtnClick = () => {
     taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
@@ -41,10 +38,44 @@ const renderTask = (taskListElement, task) => {
   render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const renderBoard = () => {};
+const renderBoard = (boardComponent, tasks) => {
+  render(boardComponent.getElement(), new SortComponent().getElement(), RenderPosition.BEFOREEND);
+  render(boardComponent.getElement(), new TasksComponent().getElement(), RenderPosition.BEFOREEND);
+
+  const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
+
+  let showingTaskCount = SHOWING_TASK_COUNT_ON_START;
+  tasks.slice(0, showingTaskCount).forEach((task) => {
+    renderTask(taskListElement, task);
+  });
+
+  const loadMoreBtnComponent = new LoadMoreBtnComponent();
+  render(boardComponent.getElement(), loadMoreBtnComponent.getElement(), RenderPosition.BEFOREEND);
+
+  loadMoreBtnComponent.getElement().addEventListener(`click`, () => {
+    const prevTaskCount = showingTaskCount;
+    showingTaskCount = showingTaskCount + SHOWING_TASK_COUNT_BY_BUTTON;
+
+    tasks.slice(prevTaskCount, showingTaskCount).forEach((task) => {
+      renderTask(taskListElement, task);
+    });
+
+    if (showingTaskCount >= tasks.length) {
+      loadMoreBtnComponent.getElement().remove();
+      loadMoreBtnComponent.removeElement();
+    }
+  });
+};
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
+const filters = generateFilters();
+const tasks = generateTasks(TASK_COUNT);
+
 render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
 render(siteMainElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+
+const boardComponent = new BoardComponent();
+render(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
+renderBoard(boardComponent, tasks);

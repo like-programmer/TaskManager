@@ -10,7 +10,7 @@ export default class LoadMoreBtn {
   }
 
   getTemplate() {
-    createLoadMoreBtnTemplate();
+    return createLoadMoreBtnTemplate();
   }
 
   getElement() {
