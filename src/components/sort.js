@@ -1,6 +1,6 @@
 import {createDOMElement} from "../utils.js";
 
-const createSortingTemplate = () => {
+const createSortTemplate = () => {
   return (`
   <div class="board__filter-list">
           <a href="#" class="board__filter">SORT BY DEFAULT</a>
@@ -16,7 +16,7 @@ export default class Sort {
   }
 
   getTemplate() {
-    return createSortingTemplate();
+    return createSortTemplate();
   }
 
   getElement() {
