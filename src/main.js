@@ -9,6 +9,8 @@ import {createLoadMoreBtnTemplate} from "./components/load-more-btn.js";
 import {generateFilters} from "./mock/filter.js";
 import {generateTasks} from "./mock/task.js";
 
+import {render} from "utils.js";
+
 
 const TASK_COUNT = 21;
 const SHOWING_TASK_COUNT_ON_START = 8;
@@ -16,10 +18,6 @@ const SHOWING_TASK_COUNT_BY_BUTTON = 8;
 
 const filters = generateFilters();
 const tasks = generateTasks(TASK_COUNT);
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);

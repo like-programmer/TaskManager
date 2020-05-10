@@ -2,6 +2,11 @@ const setTimeFormat = (value) => {
   return value < 10 ? `0${value}` : String(value);
 };
 
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+};
+
 export const formatTime = (date) => {
   const hours = date.getHours();
   const dayHalfWord = hours >= 12 ? `PM` : `AM`;
@@ -17,4 +22,15 @@ export const createDOMElement = (template) => {
   const newDOMElement = document.createElement(`div`);
   newDOMElement.innerHTML = template;
   return newDOMElement.firstChild;
+};
+
+export const render = (container, element, position) => {
+  switch (position) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
 };
