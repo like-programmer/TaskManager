@@ -1,4 +1,4 @@
-import {createDOMElement} from "../utils.js";
+import {createDOMElement} from "../utils/render.js";
 
 export default class AbstractComponent {
   constructor() {

@@ -11,7 +11,7 @@ import LoadMoreBtnComponent from "./components/load-more-btn.js";
 import {generateFilters} from "./mock/filter.js";
 import {generateTasks} from "./mock/task.js";
 
-import {RenderPosition, render} from "./utils.js";
+import {RenderPosition, render} from "./utils/render.js";
 
 
 const TASK_COUNT = 21;
