@@ -3,7 +3,7 @@ import FilterComponent from "./components/filter.js";
 import BoardComponent from "./components/board.js";
 import SortComponent from "./components/sort.js";
 import TasksComponent from "./components/tasks.js";
-import NoTasks from "./components/no-tasks.js";
+import NoTasksComponent from "./components/no-tasks.js";
 import TaskComponent from "./components/task.js";
 import TaskEditComponent from "./components/task-edit.js";
 import LoadMoreBtnComponent from "./components/load-more-btn.js";
@@ -51,19 +51,19 @@ const renderTask = (taskListElement, task) => {
     document.removeEventListener(`keydown`, onEscKeydown);
   });
 
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+  render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardComponent, tasks) => {
   const isAllTaskIsArchived = tasks.every((task) => task.isArchive);
 
   if (isAllTaskIsArchived) {
-    render(boardComponent.getElement(), new NoTasks().getElement(), RenderPosition.BEFOREEND);
+    render(boardComponent.getElement(), new NoTasksComponent(), RenderPosition.BEFOREEND);
     return;
   }
 
-  render(boardComponent.getElement(), new SortComponent().getElement(), RenderPosition.BEFOREEND);
-  render(boardComponent.getElement(), new TasksComponent().getElement(), RenderPosition.BEFOREEND);
+  render(boardComponent.getElement(), new SortComponent(), RenderPosition.BEFOREEND);
+  render(boardComponent.getElement(), new TasksComponent(), RenderPosition.BEFOREEND);
 
   const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
 
@@ -73,7 +73,7 @@ const renderBoard = (boardComponent, tasks) => {
   });
 
   const loadMoreBtnComponent = new LoadMoreBtnComponent();
-  render(boardComponent.getElement(), loadMoreBtnComponent.getElement(), RenderPosition.BEFOREEND);
+  render(boardComponent.getElement(), loadMoreBtnComponent, RenderPosition.BEFOREEND);
 
   loadMoreBtnComponent.getElement().addEventListener(`click`, () => {
     const prevTaskCount = showingTaskCount;
@@ -96,9 +96,9 @@ const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 const tasks = generateTasks(TASK_COUNT);
 const filters = generateFilters(tasks);
 
-render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilterComponent(filters), RenderPosition.BEFOREEND);
 
 const boardComponent = new BoardComponent();
-render(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
 renderBoard(boardComponent, tasks);
