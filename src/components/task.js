@@ -1,5 +1,6 @@
+import AbstractComponent from "./abstract-component";
 import {MONTH_NAMES} from "../const.js";
-import {createDOMElement, formatTime} from "../utils.js";
+import {formatTime} from "../utils.js";
 
 const createHashTagMarkup = (tags) => {
   return tags.map((tag) => {
@@ -80,24 +81,13 @@ const createTaskTemplate = (task) => {
           </article>`);
 };
 
-export default class Task {
+export default class Task extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createDOMElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
