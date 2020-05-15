@@ -20,11 +20,11 @@ const SHOWING_TASK_COUNT_BY_BUTTON = 8;
 
 const renderTask = (taskListElement, task) => {
   const replaceTaskToEdit = () => {
-    replace(taskEditComponent.getElement(), taskComponent.getElement());
+    replace(taskEditComponent, taskComponent);
   };
 
   const replaceEditToTask = () => {
-    replace(taskComponent.getElement(), taskEditComponent.getElement());
+    replace(taskComponent, taskEditComponent);
   };
 
   const onEscKeydown = (evt) => {
