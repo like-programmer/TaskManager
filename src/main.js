@@ -11,7 +11,7 @@ import LoadMoreBtnComponent from "./components/load-more-btn.js";
 import {generateFilters} from "./mock/filter.js";
 import {generateTasks} from "./mock/task.js";
 
-import {RenderPosition, render} from "./utils/render.js";
+import {RenderPosition, render, replace} from "./utils/render.js";
 
 
 const TASK_COUNT = 21;
@@ -20,11 +20,11 @@ const SHOWING_TASK_COUNT_BY_BUTTON = 8;
 
 const renderTask = (taskListElement, task) => {
   const replaceTaskToEdit = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+    replace(taskEditComponent.getElement(), taskComponent.getElement());
   };
 
   const replaceEditToTask = () => {
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+    replace(taskComponent.getElement(), taskEditComponent.getElement());
   };
 
   const onEscKeydown = (evt) => {
