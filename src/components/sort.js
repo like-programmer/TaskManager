@@ -1,4 +1,4 @@
-import {createDOMElement} from "../utils.js";
+import AbstractComponent from "./abstract-component";
 
 const createSortTemplate = () => {
   return (`<div class="board__filter-list">
@@ -8,23 +8,8 @@ const createSortTemplate = () => {
         </div>`);
 };
 
-export default class Sort {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Sort extends AbstractComponent {
   getTemplate() {
     return createSortTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createDOMElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
