@@ -45,7 +45,13 @@ const renderTask = (taskListElement, task) => {
   render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
 };
 
-const getSortedTasks = (tasks, sortType) => {
+const renderTasks = (taskListElement, tasks) => {
+  tasks.forEach((task) => {
+    renderTask(taskListElement, task);
+  });
+};
+
+const getSortedTasks = (tasks, sortType, from, to) => {
   let sortedTasks = [];
   const showingTasks = tasks.slice();
 
@@ -63,7 +69,7 @@ const getSortedTasks = (tasks, sortType) => {
       break;
   }
 
-  return sortedTasks;
+  return sortedTasks.slice(from, to);
 };
 
 export default class BoardController {
@@ -88,9 +94,9 @@ export default class BoardController {
         const prevTaskCount = showingTaskCount;
         showingTaskCount = showingTaskCount + SHOWING_TASK_COUNT_BY_BUTTON;
 
-        tasks.slice(prevTaskCount, showingTaskCount).forEach((task) => {
-          renderTask(taskListElement, task);
-        });
+        const sortedTasks = getSortedTasks(tasks, this._sortComponent.getSortType(), prevTaskCount, showingTaskCount);
+
+        renderTasks(taskListElement, sortedTasks);
 
         if (showingTaskCount >= tasks.length) {
           remove(this._loadMoreBtnComponent);
@@ -112,21 +118,18 @@ export default class BoardController {
     const taskListElement = this._tasksComponent.getElement();
 
     let showingTaskCount = SHOWING_TASK_COUNT_ON_START;
-    tasks.slice(0, showingTaskCount).forEach((task) => {
-      renderTask(taskListElement, task);
-    });
+
+    renderTasks(taskListElement, tasks.slice(0, showingTaskCount));
 
     renderLoadMoreBtn();
 
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
       showingTaskCount = SHOWING_TASK_COUNT_ON_START;
 
-      const sortedTasks = getSortedTasks(tasks, sortType);
+      const sortedTasks = getSortedTasks(tasks, sortType, 0, showingTaskCount);
       taskListElement.innerHTML = ``;
 
-      sortedTasks.slice(0, showingTaskCount).forEach((task) => {
-        renderTask(taskListElement, task);
-      });
+      renderTasks(taskListElement, sortedTasks);
 
       renderLoadMoreBtn();
     });
