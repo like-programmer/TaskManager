@@ -1,4 +1,4 @@
-import SortComponent from "../components/sort.js";
+import SortComponent, {SortType} from "../components/sort.js";
 import TasksComponent from "../components/tasks.js";
 import NoTasksComponent from "../components/no-tasks.js";
 import TaskComponent from "../components/task.js";
@@ -43,6 +43,27 @@ const renderTask = (taskListElement, task) => {
   });
 
   render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
+};
+
+const getSortedTasks = (tasks, sortType) => {
+  let sortedTasks = [];
+  const showingTasks = tasks.slice();
+
+  switch (sortType) {
+    case SortType.DATE_UP:
+      sortedTasks = showingTasks.sort((a, b) => a.dueDate - b.dueDate);
+      break;
+
+    case SortType.DATE_DOWN:
+      sortedTasks = showingTasks.sort((a, b) => b.dueDate - a.dueDate);
+      break;
+
+    case SortType.DEFAULT:
+      sortedTasks = showingTasks;
+      break;
+  }
+
+  return sortedTasks;
 };
 
 export default class BoardController {
@@ -97,11 +118,13 @@ export default class BoardController {
 
     renderLoadMoreBtn();
 
-    this._sortComponent.setSortTypeChangeHandler(() => {
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
       showingTaskCount = SHOWING_TASK_COUNT_ON_START;
+
+      const sortedTasks = getSortedTasks(tasks, sortType);
       taskListElement.innerHTML = ``;
 
-      tasks.slice(0, showingTaskCount).forEach((task) => {
+      sortedTasks.slice(0, showingTaskCount).forEach((task) => {
         renderTask(taskListElement, task);
       });
 
