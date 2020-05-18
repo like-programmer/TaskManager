@@ -130,8 +130,6 @@ export default class BoardController {
       taskListElement.innerHTML = ``;
 
       renderTasks(taskListElement, sortedTasks);
-
-      renderLoadMoreBtn();
     });
   }
 }
