@@ -11,7 +11,7 @@ const SHOWING_TASK_COUNT_ON_START = 8;
 const SHOWING_TASK_COUNT_BY_BUTTON = 8;
 
 const renderTasks = (taskListElement, tasks) => {
-  tasks.map((task) => {
+  return tasks.map((task) => {
     const taskController = new TaskController(taskListElement);
     taskController.render(task);
 
