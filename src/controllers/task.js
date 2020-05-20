@@ -22,6 +22,9 @@ export default class TaskController {
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
+    this._taskComponent.setArchiveBtnClickHandler(() => {});
+    this._taskComponent.setFavouriteBtnClickHandler(() => {});
+
     this._taskEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       this._replaceEditToTask();

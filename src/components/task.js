@@ -2,6 +2,12 @@ import AbstractComponent from "./abstract-component";
 import {MONTH_NAMES} from "../const.js";
 import {formatTime} from "../utils/common.js";
 
+const createBtnMarkup = (name, isActive = true) => {
+  return (`<button type="button" class="card__btn card__btn--${name} ${isActive ? `` : `card__btn--disabled`}">
+      ${name}
+    </button>`);
+};
+
 const createHashTagMarkup = (tags) => {
   return tags.map((tag) => {
     return (`
@@ -15,7 +21,7 @@ const createHashTagMarkup = (tags) => {
 };
 
 const createTaskTemplate = (task) => {
-  const {description, dueDate, color, repeatingDays, tags, isArchive, isFavourite} = task;
+  const {description, dueDate, color, repeatingDays, tags} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
@@ -23,28 +29,21 @@ const createTaskTemplate = (task) => {
   const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
+  const editBtn = createBtnMarkup(`edit`);
+  const archiveBtn = createBtnMarkup(`archive`, !task.isArchive);
+  const favouritesBtn = createBtnMarkup(`favorites`, !task.isFavourite);
+
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   const tagsMarkup = createHashTagMarkup(tags);
   const deadlineClass = isExpired ? `card--deadline` : ``;
-  const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
-  const favouriteButtonInactiveClass = isFavourite ? `` : `card__btn--disabled`;
 
   return (`<article class="card card--${color} ${repeatClass} ${deadlineClass}">
             <div class="card__form">
               <div class="card__inner">
                 <div class="card__control">
-                  <button type="button" class="card__btn card__btn--edit">
-                    edit
-                  </button>
-                  <button type="button" class="card__btn card__btn--archive ${archiveButtonInactiveClass}">
-                    archive
-                  </button>
-                  <button
-                    type="button"
-                    class="card__btn card__btn--favorites ${favouriteButtonInactiveClass}"
-                  >
-                    favorites
-                  </button>
+                  ${editBtn}
+                  ${archiveBtn}
+                  ${favouritesBtn}
                 </div>
 
                 <div class="card__color-bar">
@@ -90,8 +89,16 @@ export default class Task extends AbstractComponent {
   getTemplate() {
     return createTaskTemplate(this._task);
   }
-  
+
   setEditBtnClickHandler(handler) {
     this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, handler);
+  }
+
+  setArchiveBtnClickHandler() {
+    this.getElement().querySelector(`.card__btn--archive`).addEventListener(`click`, handler);
+  }
+
+  setFavouriteBtnClickHandler() {
+    this.getElement().querySelector(`.card__btn--favorites`).addEventListener(`click`, handler);
   }
 }
