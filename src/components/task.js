@@ -12,10 +12,10 @@ const createHashTagMarkup = (tags) => {
   return tags.map((tag) => {
     return (`
         <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #${tag}
-                          </span>
-                        </span>
+          <span class="card__hashtag-name">
+            #${tag}
+          </span>
+        </span>
         `);
   }).join(`\n`);
 };
