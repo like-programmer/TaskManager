@@ -9,16 +9,16 @@ const Mode = {
 };
 
 export default class TaskController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, dataChangeHandler, viewChangeHandler) {
     this._container = container;
-    this._onDataChange = onDataChange;
+    this._dataChangeHandler = dataChangeHandler;
+    this._viewChangeHandler = viewChangeHandler;
 
-    this._onViewChange = onViewChange;
     this._mode = Mode.DEFAULT;
     this._taskComponent = null;
     this._taskEditComponent = null;
 
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   render(task) {
@@ -30,17 +30,17 @@ export default class TaskController {
 
     this._taskComponent.setEditBtnClickHandler(() => {
       this._replaceTaskToEdit();
-      document.addEventListener(`keydown`, this._onEscKeyDown);
+      document.addEventListener(`keydown`, this._escKeyDownHandler);
     });
 
     this._taskComponent.setArchiveBtnClickHandler(() => {
-      this._onDataChange(this, task, Object.assign({}, task, {
+      this._dataChangeHandler(this, task, Object.assign({}, task, {
         isArchive: !task.isArchive,
       }));
     });
 
     this._taskComponent.setFavouriteBtnClickHandler(() => {
-      this._onDataChange(this, task, Object.assign({}, task, {
+      this._dataChangeHandler(this, task, Object.assign({}, task, {
         isFavourite: !task.isFavourite,
       }));
     });
@@ -48,7 +48,7 @@ export default class TaskController {
     this._taskEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       this._replaceEditToTask();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
+      document.removeEventListener(`keydown`, this._escKeyDownHandler);
     });
 
     if (oldTaskComponent && oldTaskEditComponent) {
@@ -66,7 +66,7 @@ export default class TaskController {
   }
 
   _replaceTaskToEdit() {
-    this._onViewChange();
+    this._viewChangeHandler();
     replace(this._taskEditComponent, this._taskComponent);
     this._mode = Mode.EDIT;
   }
@@ -77,12 +77,12 @@ export default class TaskController {
     this._mode = Mode.DEFAULT;
   }
 
-  _onEscKeyDown(evt) {
+  _escKeyDownHandler(evt) {
     const isEsc = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEsc) {
       this._replaceEditToTask();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
+      document.removeEventListener(`keydown`, this._escKeyDownHandler);
     }
   }
 }
