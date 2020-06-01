@@ -40,6 +40,10 @@ export default class Tasks {
     return true;
   }
 
+  setFilterChangeHandler(handler) {
+    this._filterChangehandlers.push(handler);
+  }
+
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }

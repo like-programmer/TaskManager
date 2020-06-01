@@ -56,7 +56,10 @@ export default class BoardController {
     this._dataChangeHandler = this._dataChangeHandler.bind(this);
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
     this._viewChangeHandler = this._viewChangeHandler.bind(this);
+    this._filterChangeHandler = this._filterChangeHandler.bind(this);
+
     this._sortComponent.setSortTypeChangeHandler(this._sortTypeChangeHandler);
+    this._tasksModel.setFilterChangeHandler(this._filterChangeHandler);
   }
 
   render() {
@@ -75,6 +78,11 @@ export default class BoardController {
     this._renderTasks(tasks.slice(0, this._showingTaskCount));
 
     this._renderLoadMoreBtn();
+  }
+
+  _removeTasks() {
+    this._showedTaskControllers.forEach((taskController) => taskController.destroy());
+    this._showedTaskControllers = [];
   }
 
   _renderTasks(tasks) {
@@ -107,6 +115,12 @@ export default class BoardController {
     });
   }
 
+  _updateTasks(count) {
+    this._removeTasks();
+    this._renderTasks(this._tasksModel.getTasks().slice(0, count));
+    this._renderLoadMoreBtn();
+  }
+
   _dataChangeHandler(taskController, oldData, newData) {
     const isSuccess = this._tasksModel.updateTask(oldData.id, newData);
 
@@ -131,5 +145,9 @@ export default class BoardController {
     this._showedTaskControllers = newTasks;
 
     this._renderLoadMoreBtn();
+  }
+
+  _filterChangeHandler() {
+    this._updateTasks(SHOWING_TASK_COUNT_ON_START);
   }
 }
