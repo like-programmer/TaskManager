@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component";
-import {formatTime, formatDate} from "../utils/common.js";
+import {formatTime, formatDate, isOverdueDate} from "../utils/common.js";
 
 const createBtnMarkup = (name, isActive = true) => {
   return (`<button type="button" class="card__btn card__btn--${name} ${isActive ? `` : `card__btn--disabled`}">
@@ -22,7 +22,7 @@ const createHashTagMarkup = (tags) => {
 const createTaskTemplate = (task) => {
   const {description, dueDate, color, repeatingDays, tags} = task;
 
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
   const isDateShowing = !!dueDate;
 
   const date = isDateShowing ? formatDate(dueDate) : ``;
