@@ -2,13 +2,31 @@ import TaskComponent from "../components/task.js";
 import TaskEditComponent from "../components/task-edit.js";
 
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
+import {COLOR} from "../const";
 
 export const Mode = {
+  ADDING: `adding`,
   DEFAULT: `default`,
   EDIT: `edit`,
 };
 
-export const EmptyTask = {};
+export const EmptyTask = {
+  description: ``,
+  dueDate: null,
+  repeatingDays: {
+    "mo": false,
+    "tu": false,
+    "we": false,
+    "th": false,
+    "fr": false,
+    "sa": false,
+    "su": false,
+  },
+  color: COLOR.BLACK,
+  isFavourite: false,
+  isArchive: false,
+  tags: [],
+};
 
 export default class TaskController {
   constructor(container, dataChangeHandler, viewChangeHandler) {
@@ -56,13 +74,27 @@ export default class TaskController {
     });
     this._taskEditComponent.setDeleteBtnClickHandler(() => this._dataChangeHandler(this, task, null));
 
-    if (oldTaskComponent && oldTaskEditComponent) {
-      replace(this._taskComponent, oldTaskComponent);
-      replace(this._taskEditComponent, oldTaskEditComponent);
-      this._replaceEditToTask();
-    } else {
-      render(this._container, this._taskComponent, RenderPosition.BEFOREEND);
+    switch (mode) {
+      case Mode.DEFAULT:
+        if (oldTaskComponent && oldTaskEditComponent) {
+          replace(this._taskComponent, oldTaskComponent);
+          replace(this._taskEditComponent, oldTaskEditComponent);
+          this._replaceEditToTask();
+        } else {
+          render(this._container, this._taskComponent, RenderPosition.BEFOREEND);
+        }
+        break;
+      case Mode.ADDING:
+        if (oldTaskComponent && oldTaskEditComponent) {
+          remove(oldTaskComponent);
+          remove(oldTaskEditComponent);
+        }
+
+        document.addEventListener(`keydown`, this._escKeyDownHandler);
+        render(this._container, this._taskEditComponent, RenderPosition.AFTERBEGIN);
+        break;
     }
+
   }
 
   setDefaultView() {
@@ -92,6 +124,10 @@ export default class TaskController {
   }
 
   _escKeyDownHandler(evt) {
+    if (this._mode === Mode.ADDING) {
+      this._dataChangeHandler(this, EmptyTask, null);
+    }
+
     const isEsc = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEsc) {
