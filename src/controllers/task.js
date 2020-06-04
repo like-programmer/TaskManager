@@ -124,13 +124,12 @@ export default class TaskController {
   }
 
   _escKeyDownHandler(evt) {
-    if (this._mode === Mode.ADDING) {
-      this._dataChangeHandler(this, EmptyTask, null);
-    }
-
     const isEsc = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEsc) {
+      if (this._mode === Mode.ADDING) {
+        this._dataChangeHandler(this, EmptyTask, null);
+      }
       this._replaceEditToTask();
       document.removeEventListener(`keydown`, this._escKeyDownHandler);
     }

@@ -12,7 +12,7 @@ import {generateTasks} from "./mock/task.js";
 import {RenderPosition, render} from "./utils/render.js";
 
 
-const TASK_COUNT = 21;
+const TASK_COUNT = 22;
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
