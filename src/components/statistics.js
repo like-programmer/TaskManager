@@ -1,7 +1,7 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import {isOneDay} from "../utils/common.js";
 import Chart from "chart.js";
-import ChartDataLabels from "chartjs-plugin-datalabels";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from "moment";
 import flatpickr from "flatpickr";
 
@@ -25,7 +25,7 @@ const getTasksByDateRange = (tasks, dateFrom, dateTo) => {
   });
 };
 
-const createPlaceHolder = (dateFrom, dateTo) => {
+const createPlaceholder = (dateFrom, dateTo) => {
   const format = (date) => {
     return moment(date).format(`DD MMM`);
   };
@@ -39,7 +39,6 @@ const calcUniqCountColor = (tasks, color) => {
 
 const calculateBetweenDates = (from, to) => {
   const result = [];
-
   let date = new Date(from);
 
   while (date <= to) {
@@ -53,7 +52,9 @@ const calculateBetweenDates = (from, to) => {
 };
 
 const renderColorsChart = (colorsCtx, tasks) => {
-  const colors = tasks.map((task) => task.color).filter(getUniqItems);
+  const colors = tasks
+    .map((task) => task.color)
+    .filter(getUniqItems);
 
   return new Chart(colorsCtx, {
     plugins: [ChartDataLabels],
@@ -62,14 +63,14 @@ const renderColorsChart = (colorsCtx, tasks) => {
       labels: colors,
       datasets: [{
         data: colors.map((color) => calcUniqCountColor(tasks, color)),
-        backgroundColor: colors.map((color) => colorToHex[color]),
-      }],
+        backgroundColor: colors.map((color) => colorToHex[color])
+      }]
     },
     options: {
       plugins: {
         datalabels: {
-          display: false,
-        },
+          display: false
+        }
       },
       tooltips: {
         callbacks: {
@@ -77,9 +78,9 @@ const renderColorsChart = (colorsCtx, tasks) => {
             const allData = data.datasets[tooltipItem.datasetIndex].data;
             const tooltipData = allData[tooltipItem.index];
             const total = allData.reduce((acc, it) => acc + parseFloat(it));
-            const tooltipPersentage = Math.round((tooltipData / total) * 100);
-            return `${tooltipData} TASKS - ${tooltipPersentage}%`;
-          },
+            const tooltipPercentage = Math.round((tooltipData / total) * 100);
+            return `${tooltipData} TASKS — ${tooltipPercentage}%`;
+          }
         },
         displayColors: false,
         backgroundColor: `#ffffff`,
@@ -88,13 +89,13 @@ const renderColorsChart = (colorsCtx, tasks) => {
         borderWidth: 1,
         cornerRadius: 0,
         xPadding: 15,
-        yPadding: 15,
+        yPadding: 15
       },
       title: {
         display: true,
         text: `DONE BY: COLORS`,
         fontSize: 16,
-        fontColor: `#000000`,
+        fontColor: `#000000`
       },
       legend: {
         position: `left`,
@@ -103,10 +104,10 @@ const renderColorsChart = (colorsCtx, tasks) => {
           padding: 25,
           fontStyle: 500,
           fontColor: `#000000`,
-          fontSize: 13,
-        },
-      },
-    },
+          fontSize: 13
+        }
+      }
+    }
   });
 };
 
@@ -114,12 +115,12 @@ const renderDaysChart = (daysCtx, tasks, dateFrom, dateTo) => {
   const days = calculateBetweenDates(dateFrom, dateTo);
 
   const taskCountOnDay = days.map((date) => {
-    return tasks.filters((task) => {
+    return tasks.filter((task) => {
       return isOneDay(task.dueDate, date);
     }).length;
   });
 
-  const formattedDates = days.map((date) => moment(date).format(`DD MMM`));
+  const formattedDates = days.map((it) => moment(it).format(`DD MMM`));
 
   return new Chart(daysCtx, {
     plugins: [ChartDataLabels],
@@ -134,96 +135,88 @@ const renderDaysChart = (daysCtx, tasks, dateFrom, dateTo) => {
         lineTension: 0,
         pointRadius: 8,
         pointHoverRadius: 8,
-        pointBackgroundColor: `#000000`,
-      }],
+        pointBackgroundColor: `#000000`
+      }]
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: 8,
+            size: 8
           },
-          color: `#ffffff`,
-        },
+          color: `#ffffff`
+        }
       },
       scales: {
         yAxes: [{
           ticks: {
             beginAtZero: true,
-            display: false,
+            display: false
           },
           gridLines: {
             display: false,
-            drawBorder: false,
-          },
+            drawBorder: false
+          }
         }],
         xAxes: [{
           ticks: {
             fontStyle: `bold`,
-            fontColor: `#000000`,
+            fontColor: `#000000`
           },
           gridLines: {
             display: false,
-            drawBorder: false,
-          },
-        }],
+            drawBorder: false
+          }
+        }]
       },
       legend: {
-        display: false,
+        display: false
       },
       layout: {
         padding: {
-          top: 10,
-        },
+          top: 10
+        }
       },
       tooltips: {
-        enabled: false,
-      },
-    },
+        enabled: false
+      }
+    }
   });
 };
 
 const createStatisticsTemplate = ({tasks, dateFrom, dateTo}) => {
-  const placeholder = createPlaceHolder(dateFrom, dateTo);
-  const taskCount = getTasksByDateRange(tasks, dateFrom, dateTo).length;
-
+  const placeholder = createPlaceholder(dateFrom, dateTo);
+  const tasksCount = getTasksByDateRange(tasks, dateFrom, dateTo).length;
   return (
     `<section class="statistic container">
-        <div class="statistic__line">
-          <div class="statistic__period">
-            <h2 class="statistic__period-title">Task Activity DIAGRAM</h2>
+      <div class="statistic__line">
+        <div class="statistic__period">
+          <h2 class="statistic__period-title">Task Activity DIAGRAM</h2>
 
-            <div class="statistic-input-wrap">
-              <input
-                class="statistic__period-input"
-                type="text"
-                placeholder="${placeholder}"
-              />
-            </div>
+          <div class="statistic-input-wrap">
+            <input class="statistic__period-input" type="text" placeholder="${placeholder}">
+          </div>
 
-            <p class="statistic__period-result">
-              In total for the specified period
-              <span class="statistic__task-found">${taskCount}</span> tasks were fulfilled.
-            </p>
-          </div>
-          <div class="statistic__line-graphic visually-hidden">
-            <canvas class="statistic__days" width="550" height="150"></canvas>
-          </div>
+          <p class="statistic__period-result">
+            In total for the specified period
+            <span class="statistic__task-found">${tasksCount}</span> tasks were fulfilled.
+          </p>
         </div>
-
-        <div class="statistic__circle">
-          <div class="statistic__tags-wrap visually-hidden">
-            <canvas class="statistic__tags" width="400" height="300"></canvas>
-          </div>
-          <div class="statistic__colors-wrap visually-hidden">
-            <canvas class="statistic__colors" width="400" height="300"></canvas>
-          </div>
+        <div class="statistic__line-graphic">
+          <canvas class="statistic__days" width="550" height="150"></canvas>
         </div>
-      </section>`
+      </div>
+
+      <div class="statistic__circle">
+        <div class="statistic__colors-wrap">
+          <canvas class="statistic__colors" width="400" height="300"></canvas>
+        </div>
+      </div>
+    </section>`
   );
 };
 
-export default class Statistics extends AbstractComponent {
+export default class Statistics extends AbstractSmartComponent {
   constructor({tasks, dateFrom, dateTo}) {
     super();
 
@@ -240,20 +233,16 @@ export default class Statistics extends AbstractComponent {
   }
 
   getTemplate() {
-    return createStatisticsTemplate({
-      tasks: this._tasks.getTasks(),
-      dateFrom: this._dateFrom,
-      dateTo: this._dateTo,
-    });
+    return createStatisticsTemplate({tasks: this._tasks.getTasks(), dateFrom: this._dateFrom, dateTo: this._dateTo});
   }
 
   show() {
     super.show();
+
     this.rerender(this._tasks, this._dateFrom, this._dateTo);
   }
 
-  recoveryListeners() {
-  }
+  recoveryListeners() {}
 
   rerender(tasks, dateFrom, dateTo) {
     this._tasks = tasks;
@@ -261,6 +250,7 @@ export default class Statistics extends AbstractComponent {
     this._dateTo = dateTo;
 
     super.rerender();
+
     this._renderCharts();
   }
 
@@ -304,7 +294,7 @@ export default class Statistics extends AbstractComponent {
         if (dates.length === 2) {
           this.rerender(this._tasks, dates[0], dates[1]);
         }
-      },
+      }
     });
   }
 }
