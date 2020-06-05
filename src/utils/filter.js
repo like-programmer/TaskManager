@@ -33,6 +33,10 @@ export const getTasksInOneDay = (tasks, date) => {
   return tasks.filter((task) => isOneDay(task.dueDate, date));
 };
 
+export const getTasksWithTags = (tasks) => {
+  return tasks.filter((task) => task.tags.length > 0);
+};
+
 export const getTasksByFilter = (tasks, filterType) => {
   const nowDate = new Date();
 
@@ -49,6 +53,8 @@ export const getTasksByFilter = (tasks, filterType) => {
       return getRepeatingDays(getNotArchiveTasks(tasks));
     case FilterType.TODAY:
       return getTasksInOneDay(getNotArchiveTasks(tasks), nowDate);
+    case FilterType.TAGS:
+      return getTasksWithTags(tasks);
   }
 
   return tasks;

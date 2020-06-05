@@ -17,4 +17,5 @@ export const FilterType = {
   OVERDUE: `overdue`,
   REPEATING: `repeating`,
   TODAY: `today`,
+  TAGS: `tags`,
 };
