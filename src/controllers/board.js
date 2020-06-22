@@ -69,6 +69,7 @@ export default class BoardController {
   }
 
   hide() {
+    console.log(this);
     this._container.hide();
   }
 
