@@ -97,10 +97,20 @@ export default class TaskController {
       const formData = this._taskEditComponent.getData();
       const data = parseFormData(formData);
 
+      this._taskEditComponent.setData({
+        saveBtnText: `Saving...`,
+      });
+
       this._dataChangeHandler(this, task, data);
       document.removeEventListener(`keydown`, this._escKeyDownHandler);
     });
-    this._taskEditComponent.setDeleteBtnClickHandler(() => this._dataChangeHandler(this, task, null));
+    this._taskEditComponent.setDeleteBtnClickHandler(() => {
+      this._taskEditComponent.setData({
+        deleteBtnText: `Deleting...`,
+      });
+
+      this._dataChangeHandler(this, task, null);
+    });
 
     switch (mode) {
       case Mode.DEFAULT:
@@ -144,6 +154,12 @@ export default class TaskController {
     setTimeout(() => {
       this._taskEditComponent.getElement().style.animation = ``;
       this._taskComponent.getElement().style.animation = ``;
+
+      this._taskEditComponent.setData({
+        saveBtnText: `Save`,
+        deleteBtnText: `Delete`,
+      });
+
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
