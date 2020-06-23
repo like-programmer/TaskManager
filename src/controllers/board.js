@@ -153,6 +153,9 @@ export default class BoardController {
             this._showingTaskCount = this._showedTaskControllers.length;
 
             this._renderLoadMoreBtn();
+          })
+          .catch(() => {
+            taskController.shake();
           });
       }
     } else if (newData === null) {
@@ -170,6 +173,9 @@ export default class BoardController {
             taskController.render(taskModel, TaskControllerMode.DEFAULT);
             this._updateTasks(this._showingTaskCount);
           }
+        })
+        .catch(() => {
+          taskController.shake();
         });
     }
   }

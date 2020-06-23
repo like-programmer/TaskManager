@@ -4,6 +4,8 @@ import TaskModel from "../models/task.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
 import {COLOR, DAYS} from "../const";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const Mode = {
   ADDING: `adding`,
   DEFAULT: `default`,
@@ -42,6 +44,7 @@ const parseFormData = (formData) => {
       acc[it] = true;
       return acc;
     }, repeatingDays),
+    "tags": formData.getAll(`hashtag`),
     "color": formData.get(`color`),
     "is_favorite": false,
     "is_done": false,
@@ -132,6 +135,16 @@ export default class TaskController {
     remove(this._taskComponent);
     remove(this._taskEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
+  shake() {
+    this._taskEditComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._taskComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._taskEditComponent.getElement().style.animation = ``;
+      this._taskComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _replaceTaskToEdit() {
