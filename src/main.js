@@ -9,7 +9,7 @@ import FilterController from "./controllers/filter.js";
 import {RenderPosition, render} from "./utils/render.js";
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
-const END_POINT = `https://11.ecmascript.pages.academy/task-manager`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/task-manager`;
 
 const dateTo = new Date();
 const dateFrom = (() => {
