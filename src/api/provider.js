@@ -1,19 +1,27 @@
+import Task from "../models/task.js";
+
 const isOnLine = () => {
   return window.navigator.onLine;
 };
 
 export default class Provider {
-  constructor(api) {
+  constructor(api, store) {
     this._api = api;
+    this._store = store;
   }
 
   getTasks() {
     if (isOnLine()) {
-      return this._api.getTasks();
+      return this._api.getTasks()
+        .then((tasks) => {
+          tasks.forEach((task) => this._store.setItem(task.id, task.toRAW()));
+
+          return tasks;
+        });
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
-    return Promise.reject(`offline logic is not implemented`);
+    const storeTasks = Object.values(this._store.getItems());
+    return Promise.resolve(Task.parseTasks(storeTasks));
   }
 
   createTask(task) {
