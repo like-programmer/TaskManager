@@ -8,7 +8,6 @@ export default class Task {
     this.color = data[`color`];
     this.isArchive = Boolean(data[`is_archived`]);
     this.isFavorite = Boolean(data[`is_favorite`]);
-    console.log(data);
   }
 
   toRAW() {

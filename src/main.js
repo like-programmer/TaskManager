@@ -1,5 +1,5 @@
 
-import API from "./api.js";
+import API from "./api/index.js";
 import SiteMenuComponent, {MenuItem} from "./components/site-menu.js";
 import BoardComponent from "./components/board.js";
 import StatisticsComponent from "./components/statistics.js";
