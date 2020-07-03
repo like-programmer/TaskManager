@@ -32,7 +32,7 @@ const Index = class {
       url: `tasks`,
       method: Method.POST,
       body: JSON.stringify(task.toRAW()),
-      headers: new Headers({"Content-Type": `application/json`})
+      headers: new Headers({"Content-Type": `application/json`}),
     })
       .then((response) => response.json())
       .then(Task.parseTask);
@@ -51,6 +51,16 @@ const Index = class {
 
   deleteTask(id) {
     return this._load({url: `tasks/${id}`, method: Method.DELETE});
+  }
+
+  sync(data) {
+    return this._load({
+      url: `tasks/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`}),
+    })
+      .then((response) => response.json());
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

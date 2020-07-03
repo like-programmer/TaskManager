@@ -5,6 +5,18 @@ const isOnLine = () => {
   return window.navigator.onLine;
 };
 
+const getSyncedTasks = (items) => {
+  return items.filter(({success}) => success).map(({payload}) => payload.task);
+};
+
+const createStoreStructure = (items) => {
+  return items.reduce((acc, current) => {
+    return Object.assign({}, acc, {
+      [current.id]: current,
+    });
+  }, {});
+};
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
@@ -15,11 +27,7 @@ export default class Provider {
     if (isOnLine()) {
       return this._api.getTasks()
         .then((tasks) => {
-          const items = tasks.reduce((acc, current) => {
-            return Object.assign({}, acc, {
-              [current.id]: current,
-            });
-          }, {});
+          const items = createStoreStructure(tasks.map((task) => task.toRAW()));
 
           this._store.setItems(items);
 
@@ -76,5 +84,26 @@ export default class Provider {
     this._store.removeItem(id);
 
     return Promise.resolve();
+  }
+
+  sync() {
+    if (isOnLine()) {
+      const storeTasks = Object.values(this._store.getItems());
+
+      return this._api.sync(storeTasks)
+        .then((response) => {
+          // pick up synced tasks from answer
+          const createdTasks = getSyncedTasks(response.created);
+          const updatedTasks = getSyncedTasks(response.updated);
+
+          // add synced tasks to the storage
+          // storage must be relevant in each moment
+          const items = createStoreStructure([...createdTasks, ...updatedTasks]);
+
+          this._store.setItems(items);
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
   }
 }
