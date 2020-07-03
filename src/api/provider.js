@@ -1,4 +1,5 @@
 import Task from "../models/task.js";
+import {nanoid} from "nanoid";
 
 const isOnLine = () => {
   return window.navigator.onLine;
@@ -26,11 +27,21 @@ export default class Provider {
 
   createTask(task) {
     if (isOnLine()) {
-      return this._api.createTask(task);
+      return this._api.createTask(task)
+        .then((newTask) => {
+          this._store.setItem(newTask.id, newTask.toRAW());
+
+          return newTask;
+        });
     }
 
-    // TODO: Реализовать логику при отсутствии интернета
-    return Promise.reject(`offline logic is not implemented`);
+    // In case if internet is unavailable, we must create an `id`.
+    const localNewTaskId = nanoid();
+    const localNewTask = Task.clone(Object.assign(task, {id: localNewTaskId}));
+
+    this._store.setItem(localNewTask.id, localNewTask.toRAW());
+
+    return Promise.resolve(localNewTask);
   }
 
   updateTask(id, task) {
