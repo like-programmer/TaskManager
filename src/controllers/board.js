@@ -96,6 +96,13 @@ export default class BoardController {
       return;
     }
 
+    if (this._tasksModel.getTasks().length === 0) {
+      const containerElement = this._container.getElement();
+      render(containerElement, this._sortComponent, RenderPosition.BEFOREEND);
+      render(containerElement, this._tasksComponent, RenderPosition.BEFOREEND);
+      remove(this._noTasksComponent);
+    }
+
     const taskListElement = this._tasksComponent.getElement();
     this._creatingTask = new TaskController(taskListElement, this._dataChangeHandler, this._viewChangeHandler);
     this._creatingTask.render(EmptyTask, TaskControllerMode.ADDING);
@@ -138,6 +145,13 @@ export default class BoardController {
       if (newData === null) {
         taskController.destroy();
         this._updateTasks(this._showingTaskCount);
+
+        if (this._tasksModel.getTasks().length === 0) {
+          const containerElement = this._container.getElement();
+          remove(this._sortComponent);
+          remove(this._tasksComponent);
+          render(containerElement, this._noTasksComponent, RenderPosition.BEFOREEND);
+        }
       } else {
         this._api.createTask(newData)
           .then((taskModel) => {
