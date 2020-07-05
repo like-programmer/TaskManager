@@ -75,13 +75,13 @@ const createHashTagMarkup = (tags) => {
 };
 
 const createTaskEditTemplate = (task, options = {}) => {
-  const {dueDate} = task;
-  const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription, currentColor, tags, externalData} = options;
+  const {dueDate, color} = task;
+  const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription, tags, externalData} = options;
 
   const description = encode(currentDescription);
 
   const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
-  const isBlockSaveBtn = (isDateShowing && isRepeatingTask) || (isRepeatingTask && !isRepeating(activeRepeatingDays) || !isAllowableDescriptionLength(description));
+  const isBlockSaveBtn = (isDateShowing && isRepeatingTask) || (isRepeatingTask && !isRepeating(activeRepeatingDays)) || !isAllowableDescriptionLength(description);
 
   const date = (isDateShowing && dueDate) ? formatDate(dueDate) : ``;
   const time = (isDateShowing && dueDate) ? formatTime(dueDate) : ``;
@@ -90,13 +90,13 @@ const createTaskEditTemplate = (task, options = {}) => {
   const tagsMarkup = createHashTagMarkup(tags);
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
-  const colorsMarkup = createColorsMarkup(COLORS, currentColor);
+  const colorsMarkup = createColorsMarkup(COLORS, color);
   const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, activeRepeatingDays);
 
   const deleteBtnText = externalData.deleteBtnText;
   const saveBtnText = externalData.saveBtnText;
 
-  return (`<article class="card card--edit card--${currentColor} ${repeatClass} ${deadlineClass}">
+  return (`<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__color-bar">
@@ -190,7 +190,6 @@ export default class TaskEdit extends AbstractSmartComponent {
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
     this._currentDescription = task.description;
-    this._currentColor = task.color;
     this._tags = task.tags;
     this._externalData = DefaultData;
     this._flatpickr = null;
@@ -208,7 +207,6 @@ export default class TaskEdit extends AbstractSmartComponent {
       externalData: this._externalData,
       activeRepeatingDays: this._activeRepeatingDays,
       currentDescription: this._currentDescription,
-      currentColor: this._currentColor,
       tags: this._tags,
     });
   }
@@ -239,7 +237,6 @@ export default class TaskEdit extends AbstractSmartComponent {
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
     this._currentDescription = task.description;
-    this._currentColor = task.color;
     this._tags = task.tags;
 
     this.rerender();
@@ -309,13 +306,8 @@ export default class TaskEdit extends AbstractSmartComponent {
       });
     }
 
-    element.querySelector(`.card__colors-wrap`).addEventListener(`change`, (evt) => {
-      this._currentColor = evt.target.value;
-      this.rerender();
-    });
-
     element.querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
-      const isEnter = evt.key === `Enter`;
+      const isEnter = evt.key === ` `;
 
       if (isEnter) {
         this._tags.push(evt.target.value);

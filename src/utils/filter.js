@@ -9,8 +9,8 @@ export const getNotArchiveTasks = (tasks) => {
   return tasks.filter((task) => !task.isArchive);
 };
 
-export const getFavouriteTasks = (tasks) => {
-  return tasks.filter((task) => task.isFavourite);
+export const getFavoriteTasks = (tasks) => {
+  return tasks.filter((task) => task.isFavorite);
 };
 
 export const getOverdueTasks = (tasks, date) => {
@@ -45,8 +45,8 @@ export const getTasksByFilter = (tasks, filterType) => {
       return getNotArchiveTasks(tasks);
     case FilterType.ARCHIVE:
       return getArchiveTasks(tasks);
-    case FilterType.FAVOURITES:
-      return getFavouriteTasks(getNotArchiveTasks(tasks));
+    case FilterType.FAVORITES:
+      return getFavoriteTasks(getNotArchiveTasks(tasks));
     case FilterType.OVERDUE:
       return getOverdueTasks(getNotArchiveTasks(tasks), nowDate);
     case FilterType.REPEATING:

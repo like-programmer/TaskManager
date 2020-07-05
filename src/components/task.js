@@ -21,18 +21,18 @@ const createHashTagMarkup = (tags) => {
 };
 
 const createTaskTemplate = (task) => {
-  const {description: notSaninizedDescription, dueDate, color, repeatingDays, tags} = task;
+  const {description: notSanitizedDescription, dueDate, color, repeatingDays, tags} = task;
 
   const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
   const isDateShowing = !!dueDate;
 
   const date = isDateShowing ? formatDate(dueDate) : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
-  const description = encode(notSaninizedDescription);
+  const description = encode(notSanitizedDescription);
 
   const editBtn = createBtnMarkup(`edit`);
   const archiveBtn = createBtnMarkup(`archive`, !task.isArchive);
-  const favouritesBtn = createBtnMarkup(`favorites`, !task.isFavourite);
+  const favouritesBtn = createBtnMarkup(`favorites`, !task.isFavorite);
 
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   const tagsMarkup = createHashTagMarkup(tags);
