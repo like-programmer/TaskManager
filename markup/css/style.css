@@ -721,6 +721,14 @@ form .card__text:focus {
     border-color: #0c5cdd;
 }
 
+.card--edit .card__hashtag-input:disabled {
+    opacity: 0.2;
+}
+
+.card--edit .card__hashtag-input.error {
+    border-bottom-color: red;
+}
+
 .card--edit .card__colors-inner {
     order: 3;
     display: flex;

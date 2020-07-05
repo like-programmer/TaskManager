@@ -7,6 +7,8 @@ import {encode} from "he";
 
 const MIN_DESCRIPTION_LENGTH = 1;
 const MAX_DESCRIPTION_LENGTH = 140;
+const MIN_TAG_LENGTH = 3;
+const MAX_TAG_LENGTH = 16;
 
 const DefaultData = {
   deleteBtnText: `Delete`,
@@ -17,6 +19,12 @@ const isAllowableDescriptionLength = (description) => {
   const length = description.length;
 
   return length >= MIN_DESCRIPTION_LENGTH && length <= MAX_DESCRIPTION_LENGTH;
+};
+
+const isAllowableTagLength = (tag) => {
+  const length = tag.length;
+
+  return length >= MIN_TAG_LENGTH && length <= MAX_TAG_LENGTH;
 };
 
 const createColorsMarkup = (colors, currentColor) => {
@@ -160,6 +168,7 @@ ${isDateShowing ? `
                           class="card__hashtag-input"
                           name="hashtag-input"
                           placeholder="Type new hashtag here"
+                          ${tags.length >= 5 ? `disabled` : ``}
                         />
                       </label>
                     </div>
@@ -306,13 +315,20 @@ export default class TaskEdit extends AbstractSmartComponent {
       });
     }
 
-    element.querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
-      const isEnter = evt.key === ` `;
+    const hashtagInputElement = element.querySelector(`.card__hashtag-input`);
+    hashtagInputElement.addEventListener(`input`, (evt) => {
+      evt.target.value = evt.target.value.trim();
+      if (evt.target.value.length > 0 && !isAllowableTagLength(evt.target.value)) {
+        hashtagInputElement.classList.add(`error`);
+      } else {
+        hashtagInputElement.classList.remove(`error`);
+        const isSpace = evt.data === ` `;
 
-      if (isEnter) {
-        this._tags.push(evt.target.value);
-        evt.target.value = ``;
-        this.rerender();
+        if (isSpace) {
+          this._tags.push(evt.target.value);
+          evt.target.value = ``;
+          this.rerender();
+        }
       }
     });
 
