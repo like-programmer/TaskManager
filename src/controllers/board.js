@@ -142,6 +142,7 @@ export default class BoardController {
   _dataChangeHandler(taskController, oldData, newData) {
     if (oldData === EmptyTask) {
       this._creatingTask = null;
+      // DELETING UNSAVED NEW TASK
       if (newData === null) {
         taskController.destroy();
         this._updateTasks(this._showingTaskCount);
@@ -152,6 +153,7 @@ export default class BoardController {
           remove(this._tasksComponent);
           render(containerElement, this._noTasksComponent, RenderPosition.BEFOREEND);
         }
+        // CREATING
       } else {
         this._api.createTask(newData)
           .then((taskModel) => {
@@ -172,12 +174,14 @@ export default class BoardController {
             taskController.shake();
           });
       }
+      // DELETING
     } else if (newData === null) {
       this._api.deleteTask(oldData.id)
         .then(() => {
           this._tasksModel.removeTask(oldData.id);
           this._updateTasks(this._showingTaskCount);
         });
+      // UPDATING
     } else {
       this._api.updateTask(oldData.id, newData)
         .then((taskModel) => {

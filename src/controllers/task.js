@@ -104,6 +104,7 @@ export default class TaskController {
       this._dataChangeHandler(this, task, data);
       document.removeEventListener(`keydown`, this._escKeyDownHandler);
     });
+
     this._taskEditComponent.setDeleteBtnClickHandler(() => {
       this._taskEditComponent.setData({
         deleteBtnText: `Deleting...`,

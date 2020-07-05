@@ -53,7 +53,8 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
 };
 
 const createHashTagMarkup = (tags) => {
-  return tags.map((tag) => {
+  const tagsArray = Array.from(new Set(tags));
+  return tagsArray.map((tag) => {
     return (`
         <span class="card__hashtag-inner">
                           <input
@@ -74,8 +75,8 @@ const createHashTagMarkup = (tags) => {
 };
 
 const createTaskEditTemplate = (task, options = {}) => {
-  const {dueDate, color, tags} = task;
-  const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription, externalData} = options;
+  const {dueDate} = task;
+  const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription, currentColor, tags, externalData} = options;
 
   const description = encode(currentDescription);
 
@@ -89,13 +90,13 @@ const createTaskEditTemplate = (task, options = {}) => {
   const tagsMarkup = createHashTagMarkup(tags);
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
-  const colorsMarkup = createColorsMarkup(COLORS, color);
+  const colorsMarkup = createColorsMarkup(COLORS, currentColor);
   const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, activeRepeatingDays);
 
   const deleteBtnText = externalData.deleteBtnText;
   const saveBtnText = externalData.saveBtnText;
 
-  return (`<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
+  return (`<article class="card card--edit card--${currentColor} ${repeatClass} ${deadlineClass}">
             <form class="card__form" method="get">
               <div class="card__inner">
                 <div class="card__color-bar">
@@ -189,6 +190,8 @@ export default class TaskEdit extends AbstractSmartComponent {
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
     this._currentDescription = task.description;
+    this._currentColor = task.color;
+    this._tags = task.tags;
     this._externalData = DefaultData;
     this._flatpickr = null;
     this._submitHandler = null;
@@ -205,6 +208,8 @@ export default class TaskEdit extends AbstractSmartComponent {
       externalData: this._externalData,
       activeRepeatingDays: this._activeRepeatingDays,
       currentDescription: this._currentDescription,
+      currentColor: this._currentColor,
+      tags: this._tags,
     });
   }
 
@@ -234,6 +239,8 @@ export default class TaskEdit extends AbstractSmartComponent {
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
     this._currentDescription = task.description;
+    this._currentColor = task.color;
+    this._tags = task.tags;
 
     this.rerender();
   }
@@ -301,5 +308,20 @@ export default class TaskEdit extends AbstractSmartComponent {
         this.rerender();
       });
     }
+
+    element.querySelector(`.card__colors-wrap`).addEventListener(`change`, (evt) => {
+      this._currentColor = evt.target.value;
+      this.rerender();
+    });
+
+    element.querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
+      const isEnter = evt.key === `Enter`;
+
+      if (isEnter) {
+        this._tags.push(evt.target.value);
+        evt.target.value = ``;
+        this.rerender();
+      }
+    });
   }
 }

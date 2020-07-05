@@ -9,7 +9,7 @@ import BoardController from "./controllers/board.js";
 import FilterController from "./controllers/filter.js";
 import {RenderPosition, render} from "./utils/render.js";
 
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
+const AUTHORIZATION = `Basic dXNlckBwYXNgg29yZAo=`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/task-manager`;
 const STORE_PREFIX = `taskmanager-localstorage`;
 const STORE_VER = `v1`;
