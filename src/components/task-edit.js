@@ -7,8 +7,8 @@ import {encode} from "he";
 
 const MIN_DESCRIPTION_LENGTH = 1;
 const MAX_DESCRIPTION_LENGTH = 140;
-const MIN_TAG_LENGTH = 3;
-const MAX_TAG_LENGTH = 16;
+const MIN_TAG_LENGTH = 2;
+const MAX_TAG_LENGTH = 15;
 
 const DefaultData = {
   deleteBtnText: `Delete`,

@@ -81,12 +81,20 @@ export default class TaskController {
       const newTask = TaskModel.clone(task);
       newTask.isArchive = !newTask.isArchive;
 
+      this._taskComponent.setData({
+        archiveBtnText: `Archiving...`,
+      });
+
       this._dataChangeHandler(this, task, newTask);
     });
 
     this._taskComponent.setFavouriteBtnClickHandler(() => {
       const newTask = TaskModel.clone(task);
       newTask.isFavorite = !newTask.isFavorite;
+
+      this._taskComponent.setData({
+        favoriteBtnText: `Favoriting...`,
+      });
 
       this._dataChangeHandler(this, task, newTask);
     });

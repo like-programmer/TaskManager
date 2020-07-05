@@ -199,6 +199,9 @@ export default class BoardController {
   }
 
   _viewChangeHandler() {
+    if (this._creatingTask) {
+      this._creatingTask.destroy();
+    }
     this._showedTaskControllers.forEach((it) => it.setDefaultView());
   }
 

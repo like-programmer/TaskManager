@@ -2,6 +2,11 @@ import AbstractComponent from "./abstract-component";
 import {formatTime, formatDate, isOverdueDate} from "../utils/common.js";
 import {encode} from "he";
 
+const DefaultData = {
+  favoriteBtnText: `favorites`,
+  archiveBtnText: `archive`,
+};
+
 const createBtnMarkup = (name, isActive = true) => {
   return (`<button type="button" class="card__btn card__btn--${name} ${isActive ? `` : `card__btn--disabled`}">
       ${name}
@@ -20,9 +25,9 @@ const createHashTagMarkup = (tags) => {
   }).join(`\n`);
 };
 
-const createTaskTemplate = (task) => {
+const createTaskTemplate = (task, options = {}) => {
   const {description: notSanitizedDescription, dueDate, color, repeatingDays, tags} = task;
-
+  const {externalData} = options;
   const isExpired = dueDate instanceof Date && isOverdueDate(dueDate, new Date());
   const isDateShowing = !!dueDate;
 
@@ -31,8 +36,8 @@ const createTaskTemplate = (task) => {
   const description = encode(notSanitizedDescription);
 
   const editBtn = createBtnMarkup(`edit`);
-  const archiveBtn = createBtnMarkup(`archive`, !task.isArchive);
-  const favouritesBtn = createBtnMarkup(`favorites`, !task.isFavorite);
+  const archiveBtn = createBtnMarkup(`${externalData.archiveBtnText}`, !task.isArchive);
+  const favouritesBtn = createBtnMarkup(`${externalData.favoriteBtnText}`, !task.isFavorite);
 
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
   const tagsMarkup = createHashTagMarkup(tags);
@@ -85,10 +90,13 @@ export default class Task extends AbstractComponent {
   constructor(task) {
     super();
     this._task = task;
+    this._externalData = DefaultData;
   }
 
   getTemplate() {
-    return createTaskTemplate(this._task);
+    return createTaskTemplate(this._task, {
+      externalData: this._externalData,
+    });
   }
 
   setEditBtnClickHandler(handler) {
@@ -101,5 +109,21 @@ export default class Task extends AbstractComponent {
 
   setFavouriteBtnClickHandler(handler) {
     this.getElement().querySelector(`.card__btn--favorites`).addEventListener(`click`, handler);
+  }
+
+  rerender() {
+    const oldElement = this.getElement();
+    const parent = oldElement.parentElement;
+
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, oldElement);
+  }
+
+  setData(data) {
+    this._externalData = Object.assign({}, DefaultData, data);
+    this.rerender();
   }
 }
