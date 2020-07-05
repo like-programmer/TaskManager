@@ -99,18 +99,6 @@ export default class Task extends AbstractComponent {
     });
   }
 
-  setEditBtnClickHandler(handler) {
-    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, handler);
-  }
-
-  setArchiveBtnClickHandler(handler) {
-    this.getElement().querySelector(`.card__btn--archive`).addEventListener(`click`, handler);
-  }
-
-  setFavouriteBtnClickHandler(handler) {
-    this.getElement().querySelector(`.card__btn--favorites`).addEventListener(`click`, handler);
-  }
-
   rerender() {
     const oldElement = this.getElement();
     const parent = oldElement.parentElement;
@@ -125,5 +113,17 @@ export default class Task extends AbstractComponent {
   setData(data) {
     this._externalData = Object.assign({}, DefaultData, data);
     this.rerender();
+  }
+
+  setEditBtnClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, handler);
+  }
+
+  setArchiveBtnClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--archive`).addEventListener(`click`, handler);
+  }
+
+  setFavouriteBtnClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--favorites`).addEventListener(`click`, handler);
   }
 }

@@ -289,6 +289,10 @@ export default class TaskEdit extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     const element = this.getElement();
+    const repeatDays = element.querySelector(`.card__repeat-days`);
+    const hashtagInputElement = element.querySelector(`.card__hashtag-input`);
+
+    const tagDeleteBtnElements = element.querySelectorAll(`.card__hashtag-delete`);
 
     element.querySelector(`.card__text`).addEventListener(`input`, (evt) => {
       this._currentDescription = evt.target.value;
@@ -307,7 +311,6 @@ export default class TaskEdit extends AbstractSmartComponent {
       this.rerender();
     });
 
-    const repeatDays = element.querySelector(`.card__repeat-days`);
     if (repeatDays) {
       repeatDays.addEventListener(`change`, (evt) => {
         this._activeRepeatingDays[evt.target.value] = evt.target.checked;
@@ -315,7 +318,6 @@ export default class TaskEdit extends AbstractSmartComponent {
       });
     }
 
-    const hashtagInputElement = element.querySelector(`.card__hashtag-input`);
     hashtagInputElement.addEventListener(`input`, (evt) => {
       evt.target.value = evt.target.value.trim();
       if (evt.target.value.length > 0 && !isAllowableTagLength(evt.target.value)) {
@@ -331,8 +333,6 @@ export default class TaskEdit extends AbstractSmartComponent {
         }
       }
     });
-
-    const tagDeleteBtnElements = Array.from(element.querySelectorAll(`.card__hashtag-delete`));
 
     tagDeleteBtnElements.forEach((btn) => {
       btn.addEventListener(`click`, () => {
