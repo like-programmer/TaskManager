@@ -164,6 +164,11 @@ export default class TaskController {
       this._taskEditComponent.getElement().style.animation = ``;
       this._taskComponent.getElement().style.animation = ``;
 
+      this._taskComponent.setData({
+        favoriteBtnText: `favorites`,
+        archiveBtnText: `archive`,
+      });
+
       this._taskEditComponent.setData({
         saveBtnText: `Save`,
         deleteBtnText: `Delete`,
