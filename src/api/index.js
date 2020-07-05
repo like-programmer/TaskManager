@@ -15,7 +15,7 @@ const checkStatus = (response) => {
   }
 };
 
-const Index = class {
+export default class Index {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -73,5 +73,3 @@ const Index = class {
       });
   }
 };
-
-export default Index;
