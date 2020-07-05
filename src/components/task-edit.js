@@ -315,5 +315,16 @@ export default class TaskEdit extends AbstractSmartComponent {
         this.rerender();
       }
     });
+
+    const tagDeleteBtnElements = Array.from(element.querySelectorAll(`.card__hashtag-delete`));
+
+    tagDeleteBtnElements.forEach((btn) => {
+      btn.addEventListener(`click`, () => {
+        const tagName = btn.previousElementSibling.textContent.trim().substr(1);
+        const index = this._tags.findIndex((name) => name === tagName);
+        this._tags.splice(index, 1);
+        this.rerender();
+      });
+    });
   }
 }
