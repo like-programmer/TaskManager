@@ -1,5 +1,17 @@
 import moment from "moment";
 
+let lastTimeout;
+
+export const debounce = (action) => {
+  if (lastTimeout) {
+    window.clearTimeout(lastTimeout);
+  }
+
+  lastTimeout = window.setTimeout(() => {
+    action();
+  }, 500);
+};
+
 export const formatTime = (date) => {
   return moment(date).format(`hh:mm A`);
 };

@@ -123,7 +123,7 @@ export default class Task extends AbstractComponent {
     this.getElement().querySelector(`.card__btn--archive`).addEventListener(`click`, handler);
   }
 
-  setFavouriteBtnClickHandler(handler) {
+  setFavoriteBtnClickHandler(handler) {
     this.getElement().querySelector(`.card__btn--favorites`).addEventListener(`click`, handler);
   }
 }

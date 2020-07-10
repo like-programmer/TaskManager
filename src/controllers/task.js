@@ -2,6 +2,7 @@ import TaskComponent from "../components/task.js";
 import TaskEditComponent from "../components/task-edit.js";
 import TaskModel from "../models/task.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
+import {debounce} from "../utils/common.js";
 import {COLOR, DAYS} from "../const";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
@@ -78,25 +79,29 @@ export default class TaskController {
     });
 
     this._taskComponent.setArchiveBtnClickHandler(() => {
-      const newTask = TaskModel.clone(task);
-      newTask.isArchive = !newTask.isArchive;
+      debounce(() => {
+        const newTask = TaskModel.clone(task);
+        newTask.isArchive = !newTask.isArchive;
 
-      this._taskComponent.setData({
-        archiveBtnText: `Archiving...`,
+        this._taskComponent.setData({
+          archiveBtnText: `Archiving...`,
+        });
+
+        this._dataChangeHandler(this, task, newTask);
       });
-
-      this._dataChangeHandler(this, task, newTask);
     });
 
-    this._taskComponent.setFavouriteBtnClickHandler(() => {
-      const newTask = TaskModel.clone(task);
-      newTask.isFavorite = !newTask.isFavorite;
+    this._taskComponent.setFavoriteBtnClickHandler(() => {
+      debounce(() => {
+        const newTask = TaskModel.clone(task);
+        newTask.isFavorite = !newTask.isFavorite;
 
-      this._taskComponent.setData({
-        favoriteBtnText: `Favoriting...`,
+        this._taskComponent.setData({
+          favoriteBtnText: `Favoriting...`,
+        });
+
+        this._dataChangeHandler(this, task, newTask);
       });
-
-      this._dataChangeHandler(this, task, newTask);
     });
 
     this._taskEditComponent.setSubmitHandler((evt) => {
